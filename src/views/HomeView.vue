@@ -12,7 +12,6 @@ const getSearchResults = () => {
     if (searchQuery.value) {
       const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchQuery.value}&limit=5&appid=${apiKey}`)
       searchResults.value = await response.json()
-      console.log(searchResults.value)
       return;
     }
     searchResults.value = null
