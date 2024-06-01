@@ -1,11 +1,28 @@
 <script setup>
 import { ref } from "vue"
+import { useRouter } from "vue-router";
 
 const searchQuery = ref('')
 const queryTimeout = ref(null)
 const searchResults = ref(null)
 const searchError = ref(null)
 const apiKey = import.meta.env.VITE_APP_API_KEY
+
+const router = useRouter()
+
+const previewCity = (searchResult) => {
+  router.push({
+    name: 'cityView',
+    params: {
+      state: searchResult.state,
+      city: searchResult.name
+    },
+    query: {
+      lat: searchResult.lat,
+      lon: searchResult.lon
+    }
+  })
+}
 
 const getSearchResults = () => {
   clearTimeout(queryTimeout.value)
@@ -36,7 +53,7 @@ const getSearchResults = () => {
         <p v-if="searchError">Sorry, something went wrong, please try again</p>
         <p v-if="!searchError && !searchResults.length">No results match your query, try a different term.</p>
         <template v-else>
-          <li v-for="(searchResult, index) in searchResults" :key="index" class="py-2 cursor-pointer">
+          <li v-for="(searchResult, index) in searchResults" :key="index" @click="previewCity(searchResult)" class="py-2 cursor-pointer">
             {{ searchResult.name }}, {{ searchResult.state }}</li>
         </template>
 
